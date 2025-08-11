@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+name="lxrandr"
+version="0.3.3"
+description="Monitor configuration tool (part of LXDE)"
+#source="https://downloads.sourceforge.net/lxde/lxrandr-$version.tar.xz"
+source="https://github.com/lxde/lxrandr/archive/refs/tags/$version.tar.gz"
+depends="gtk3,xrandr"
+builddepend="intltool"
+group="lxde.base"
+
+
+setup(){
+	cd $SOURCEDIR
+    autoreconf -fvi
+    ./configure --prefix=/usr \
+    	--enable-gtk3 \
+    	--disable-man \
+        --libdir=/usr/lib64/
+}
+
+build(){
+    make DESTDIR=$DESTDIR
+}
+
+package(){
+    make DESTDIR=$DESTDIR install
+}
+

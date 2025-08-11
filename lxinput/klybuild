@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+name="lxinput"
+version="0.3.6"
+description="LXDE keyboard and mouse configuration tool"
+#source="https://downloads.sourceforge.net/lxde/lxinput-$version.tar.xz"
+source="https://github.com/lxde/lxinput/archive/refs/tags/$version.tar.gz"
+depends="gtk3"
+builddepend="intltool"
+group="lxde.base"
+
+
+setup(){
+	cd $SOURCEDIR
+	autoreconf -fvi
+    ./configure --prefix=/usr \
+        --libdir=/usr/lib64/ \
+        --enable-gtk3 
+}
+
+build(){
+    make
+}
+
+package(){
+    make install DESTDIR=$DESTDIR
+}
+

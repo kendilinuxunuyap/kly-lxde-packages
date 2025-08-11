@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+name="pkgconf"
+version="2.5.1"
+description="development framework configuration tools"
+source="https://github.com/pkgconf/pkgconf/archive/refs/tags/pkgconf-$version.tar.gz"
+depends="glibc"
+builddepend="perl,libunwind"
+group="dev.util"
+
+setup () {
+   cd  $SOURCEDIR
+   cp -prvf ${dizin}/${paket}/files/ /tmp/kly/build/
+	autoreconf -fvi
+	./configure --prefix=/usr \
+    	--libdir=/usr/lib64/\
+        --with-pkg-config-dir=/usr/share/pkgconfig:/usr/lib64/pkgconfig:/lib64/pkgconfig
+}
+
+build () {
+    make 
+}
+
+package () {
+    make install DESTDIR=$DESTDIR
+    ln -s pkgconf "$DESTDIR"/usr/bin/pkg-config
+    install -Dt "${DESTDIR}/usr/share/pkgconfig/personality.d" -m644 \
+    ../files/i686-pc-linux-gnu.personality \
+    ../files/x86_64-pc-linux-gnu.personality
+}
+

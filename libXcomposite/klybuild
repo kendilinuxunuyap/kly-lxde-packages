@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+name="libXcomposite"
+version="0.4.6"
+description="X.Org Xcomposite library"
+source="https://gitlab.freedesktop.org/xorg/lib/libxcomposite/-/archive/libXcomposite-$version/libxcomposite-libXcomposite-$version.tar.gz"
+depends=""
+group="x11.libs"
+
+setup(){
+	cd $SOURCEDIR
+	autoreconf -fvi
+    ./configure --prefix=/usr \
+        --libdir=/usr/lib64/
+}
+
+build(){
+    make
+}
+
+package(){
+    make install DESTDIR=$DESTDIR
+}
+

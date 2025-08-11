@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+name="lxde-common"
+version="0.99.3"
+description="Common files of the LXDE Desktop"
+source="https://github.com/lxde/lxde-common/archive/refs/tags/$version.tar.gz"
+depends=""
+builddepend="intltool"
+group="lxde.base"
+
+
+setup(){
+	cp -prvf $PACKAGEDIR/files /tmp/bps/build/
+    cd $SOURCEDIR
+    patch -Np1 -i ../files/dbus-update-environment.patch
+    patch -Np1 -i ../files/default-config.patch
+    autoreconf -fvi
+    ./configure	--prefix=/usr \
+    	--libdir=/usr/lib64/  
+}
+build(){
+    make
+}
+
+package(){
+    make DESTDIR="$DESTDIR" install
+}

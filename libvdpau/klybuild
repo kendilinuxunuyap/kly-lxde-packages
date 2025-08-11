@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+name="libvdpau"
+version="1.5"
+description="VDPAU wrapper and trace libraries"
+source="https://gitlab.freedesktop.org/vdpau/libvdpau/-/archive/$version/libvdpau-$version.tar.gz"
+depends="libXext"
+group="x11.libs"
+
+
+setup(){
+	cd $SOURCEDIR
+    meson setup $BUILDDIR --prefix=/usr \
+        -Ddefault_library=both \
+        --libdir=/usr/lib64 \
+        -Ddri2=true
+}
+
+build(){
+    ninja -C $BUILDDIR
+}
+
+package(){
+    DESTDIR=$DESTDIR ninja -C $BUILDDIR install
+}
+

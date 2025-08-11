@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+name="xarchiver"
+version="0.5.4.25"
+description="GTK+ frontend to various command line archivers"
+source="https://github.com/ib/xarchiver/archive/$version.tar.gz"
+depends="desktop-file-utils,hicolor-icon-theme,tar"
+builddepend="intltool,libxslt,gtk3"
+group="app.arch"
+
+
+setup(){
+    cd $SOURCEDIR
+    ./configure	--prefix=/usr \
+    	--libdir=/usr/lib64/ \
+		--libexecdir=/usr/lib64/    
+}
+build(){
+    make
+}
+
+package(){
+    make DESTDIR="$DESTDIR" install
+}

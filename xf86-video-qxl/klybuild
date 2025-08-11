@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+name="xf86-video-qxl"
+version="0.1.6"
+description="Xorg X11 qxl video driver"
+source="https://xorg.freedesktop.org/releases/individual/driver/xf86-video-qxl-$version.tar.xz"
+depends="spice,libudev,libxfont2"
+group="x11.drivers"
+setup(){
+	cd $SOURCEDIR
+	./autogen.sh
+	./configure --prefix=/usr \
+		--libdir=/usr/lib64/ \
+		-enable-xspice
+}
+build(){
+make
+}
+package(){
+make install DESTDIR=$DESTDIR
+install -v -Dm0755 scripts/Xspice "${DESTDIR}"/usr/bin/Xspice
+}

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+name="intltool"
+version="0.51.0"
+description="The internationalization tool collection"
+source="https://launchpad.net/intltool/trunk/${version}/+download/intltool-${version}.tar.gz"
+depends="perl-xml-parser,gettext,file"
+group="dev.util"
+
+setup(){
+    $SOURCEDIR/configure --prefix=/usr \
+        --libdir=/usr/lib64/
+}
+
+build(){
+    make
+}
+
+package(){
+    make install DESTDIR=$DESTDIR
+}
+

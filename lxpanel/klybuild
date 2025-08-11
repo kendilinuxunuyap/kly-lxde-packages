@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+name="lxpanel"
+version="0.10.1"
+description="Lightweight X11 desktop panel for LXDE"
+source="https://github.com/lxde-gtk3/lxpanel/archive/refs/heads/master.zip"
+depends="libwnck3,wireless-tools,curl,alsa-lib,libwnck,"
+builddepend="intltool,docbook-xml,docbook-xsl,wireless-tools"
+group="lxde.base"
+
+
+setup(){
+    cd $SOURCEDIR
+	export PKG_CONFIG_PATH=/usr/lib64/pkgconfig:$PKG_CONFIG_PATH
+    sed -i "/pager.c/d" plugins/Makefile.am
+    sed -i "/STATIC_PAGER/d" src/private.h
+    sed -i "s/libwnck-3.0//" configure.ac
+    sed -i "s/background=1/background=0/" data/default/panels/panel.in
+
+	
+    #./configure --prefix=/usr --with-gtk=3 \
+     #  --libdir=/usr/lib64/ \
+      #  --disable-silent-rules \
+       # --with-plugins=all,-cpufreq
+       autoreconf -fvi
+	./configure --prefix=/usr --enable-gtk3
+
+	#sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+}
+
+build(){
+    make
+}
+
+package(){
+    make install DESTDIR=$DESTDIR
+}
+
