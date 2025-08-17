@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+name="xdg-desktop-portal-gtk"
+version="1.15.3"
+description="A backend implementation for xdg-desktop-portal using GTK"
+source="https://github.com/flatpak/xdg-desktop-portal-gtk/archive/refs/tags/$version.tar.gz"
+depends="gsettings-desktop-schemas,gtk3,xdg-desktop-portal"
+group="sys.apps"
+
+
+setup(){
+	cd $SOURCEDIR
+    meson setup $BUILDDIR --prefix=/usr \
+        --libdir=/usr/lib64/ \
+        -Db_lto=true \
+		-Dappchooser=enabled \
+		-Ddatarootdir=/usr/lib/pkgconfig \
+		-Ddbus-service-dir=/usr/share/dbus-1/services/ \
+		-Dlockdown=enabled \
+		-Dsettings=enabled \
+		-Dwallpaper=disabled
+}
+
+build(){
+    ninja -C $BUILDDIR
+}
+
+package(){
+    DESTDIR="$DESTDIR" ninja -C $BUILDDIR install
+}

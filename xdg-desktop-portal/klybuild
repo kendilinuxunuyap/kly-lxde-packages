@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+name="xdg-desktop-portal"
+version="1.18.2"
+description="Desktop integration portals for sandboxed apps"
+source="https://github.com/flatpak/xdg-desktop-portal/releases/download/${version}/xdg-desktop-portal-${version}.tar.xz"
+depends="fuse,gdk-pixbuf,glib,pipewire,bubblewrap"
+group="sys.apps"
+
+
+setup(){
+	cd $SOURCEDIR
+	#	sed -i "/pipewire_dep/d" $SOURCEDIR/meson.build
+	#sed -i "/pipewire_dep,/d" $SOURCEDIR/src/meson.build
+    meson setup $BUILDDIR --prefix=/usr \
+        --libdir=/usr/lib64/ \
+		-Db_lto=true \
+		-Dsystemd=disabled \
+		-Dlibportal=disabled \
+		-Dgeoclue=disabled 
+		#-Dlibpipewire=false 
+}
+
+build(){
+    ninja -C $BUILDDIR
+}
+
+package(){
+    DESTDIR="$DESTDIR" ninja -C $BUILDDIR install
+	mv "$DESTDIR"/usr/share/pkgconfig "$DESTDIR"/usr/lib/
+}
+
