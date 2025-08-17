@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+name="pipewire"
+version="1.4.7"
+url="https://pipewire.org/"
+description="Multimedia processing graphs "
+source="https://gitlab.freedesktop.org/pipewire/pipewire/-/archive/$version/pipewire-$version.tar.gz"
+depends="lilv,libpulse,alsa-lib,dbus"
+group="media.video"
+uses="alsa gstreamer bluetooth jack"
+
+setup(){
+	cp -prvf $PACKAGEDIR/files/ /tmp/kly/build/
+	cd $SOURCEDIR
+
+   meson setup $BUILDDIR --prefix=/usr \
+    --libdir=/usr/lib64 \
+    -D gstreamer=disabled\
+    -D gstreamer-device-provider=disabled \
+    -D pipewire-alsa=enabled\
+    -D alsa=enabled\
+    -D jack=disabled\
+    -D bluez5=disabled\
+    -D bluez5-backend-hsp-native=disabled\
+    -D bluez5-backend-hfp-native=disabled\
+    -D bluez5-codec-opus=disabled\
+    -D v4l2=disabled\
+    -D session-managers=[]
+}
+build(){
+   ninja -C $BUILDDIR
+}
+
+package(){
+    DESTDIR=$DESTDIR ninja -C $BUILDDIR install
+    mkdir -p ${DESTDIR}/usr/libexec ${DESTDIR}/etc/xdg/autostart/
+    # pipewire launcher from alpine linux
+    install ../files/pipewire-launcher.sh ${DESTDIR}/usr/libexec/pipewire-launcher
+    install ../files/pipewire.desktop ${DESTDIR}/etc/xdg/autostart/
+    
+}

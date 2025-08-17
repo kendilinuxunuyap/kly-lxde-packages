@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+name="pavucontrol"
+version="5.0"
+url="https://freedesktop.org/software/pulseaudio/pavucontrol/"
+description="Pulseaudio Volume Control, GTK based mixer for Pulseaudio"
+source="https://freedesktop.org/software/pulseaudio/pavucontrol/pavucontrol-${version}.tar.xz"
+depends="gtkmm3,json-glib,libcanberra,intltool,sound-theme-freedesktop"
+group="media.sound"
+
+setup () {
+
+	cd $SOURCEDIR
+    ./configure --prefix=/usr \
+		--libdir=/usr/lib64/
+}
+
+build () {
+    make
+}
+
+package () {
+    make install DESTDIR=$DESTDIR
+}
+

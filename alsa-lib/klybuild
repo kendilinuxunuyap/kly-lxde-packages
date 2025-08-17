@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+name="alsa-lib"
+version="1.2.10"
+url="https://www.alsa-project.org/"
+description="alsa-lib Advanced Linux Sound Architecture Library"
+source="https://github.com/alsa-project/alsa-lib/archive/refs/tags/v$version.tar.gz"
+depends=""
+group="media.libs"
+
+setup(){
+	cd $SOURCEDIR
+	autoreconf -fvi
+	./configure --prefix=/usr \
+		--libdir=/usr/lib64/
+}
+
+build(){
+    make
+}
+
+package(){
+    make install DESTDIR=$DESTDIR
+}
+
